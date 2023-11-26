@@ -9,6 +9,7 @@ public class TerrainGeneration : MonoBehaviour
     [Header("Tile Sprites")]
     public Sprite grass;
     public Sprite dirt;
+    public Sprite gravel;
     public Sprite stone;
     public Sprite log;
     public Sprite leaf;
@@ -19,11 +20,17 @@ public class TerrainGeneration : MonoBehaviour
     public int maxTreeHeight = 6;
 
     [Header("Terrain Generation")]
-    public int dirtLayerHeight = 5;
+    public int chunkSize = 16; // Load world in chunks
+    
     public float surfaceValue = 0.25f;
     public int worldSize = 100;
     public float heightMultiplier = 4f;
     public int heightAddition = 25; // smooth out hills
+
+    [Header("Material Layers")]
+    public int dirtLayerHeight = 5;
+    public int gravelLayerHeight = 12;
+
 
     [Header("Noise Settings")]
     public float caveFreq = 0.05f;
@@ -31,17 +38,34 @@ public class TerrainGeneration : MonoBehaviour
     public float seed;
     public Texture2D noiseTexture; // basically a 2d array of colours, each index is a pixel of texture
 
+    public GameObject[] worldChunks;
     private List<Vector2> worldTiles = new List<Vector2>(); // keep track of generated tiles
 
     private void Start()
     {
         seed = Random.Range(-10000, 10000);
         GenerateNoiseTexture();
+        CreateChunks();
         GenerateTerrain();
+    }
+
+    public void CreateChunks()
+    {
+        int numChuncks = worldSize / chunkSize; // number of chunks generated
+        worldChunks = new GameObject[numChuncks];
+
+        for(int i = 0; i<numChuncks; i++ )
+        {
+            GameObject newChunk = new GameObject();
+            newChunk.name = i.ToString(); // name chunks in hierachy
+            newChunk.transform.parent = this.transform;
+            worldChunks[i] = newChunk; // add chunks to array of chunks
+        }
     }
 
     public void GenerateTerrain()
     {
+
         // male world actually look like terrain
         for (int x = 0; x < worldSize; x++) // generate to world size on x...
         {
@@ -50,11 +74,15 @@ public class TerrainGeneration : MonoBehaviour
             for (int y = 0; y < height; y++) // ...and y on height
             {
                 Sprite tileSprite; ;
-                if (y < height - dirtLayerHeight)
+                if (y < height - gravelLayerHeight)
                 {
                     tileSprite = stone;
                 }
-                else if(y < height - 1)
+                else if(y < height - dirtLayerHeight)
+                {
+                    tileSprite = gravel;
+                }
+                else if (y < height - 1)
                 {
                     tileSprite = dirt;
                 }
@@ -62,8 +90,6 @@ public class TerrainGeneration : MonoBehaviour
                 {
                     // top layer of terrain
                     tileSprite = grass;
-
-                    
                 }
 
                 // This section generates caves
@@ -107,7 +133,7 @@ public class TerrainGeneration : MonoBehaviour
         noiseTexture.Apply();
     }
 
-    public void GenerateTree(float x, float y)
+    public void GenerateTree(int x, int y)
     {
         // define our tree trunk
         int treeHeight = Random.Range(minTreeHeight, maxTreeHeight); // tree height will be different for each tree
@@ -127,10 +153,16 @@ public class TerrainGeneration : MonoBehaviour
         PlaceTile(leaf, x + 1, y + treeHeight + 1);
     }
 
-    public void PlaceTile(Sprite tileSprite, float x, float y)
+    public void PlaceTile(Sprite tileSprite, int x, int y)
     {
         GameObject newTile = new GameObject(); // NEED TO SAVE THIS GAMEOBJECTS STATE, THEN LOAD IT BACK IN WHEN WE START PLAYING AGIN
-        newTile.transform.parent = this.transform;
+
+        // Place chunks in correct place
+        float chunkCoord = (Mathf.RoundToInt(x / chunkSize) * chunkSize);
+        chunkCoord /= chunkSize;
+        newTile.transform.parent = worldChunks[(int)chunkCoord].transform;
+
+        // Place tile sprites
         newTile.AddComponent<SpriteRenderer>();
         newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
         newTile.name = tileSprite.name;
@@ -139,3 +171,19 @@ public class TerrainGeneration : MonoBehaviour
         worldTiles.Add(newTile.transform.position - (Vector3.one * 0.5f)); // track all tiles added to get their position
     }
 }
+
+/*
+if (y < height - dirtLayerHeight)
+{
+    tileSprite = stone;
+}
+else if (y < height - 1)
+{
+    tileSprite = dirt;
+}
+else
+{
+    // top layer of terrain
+    tileSprite = grass;
+}
+*/
