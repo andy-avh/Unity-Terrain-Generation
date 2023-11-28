@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739c1abc69a066949be2fa4b0c5083b2, type: 3}
+  m_Name: Diamond
+  m_EditorClassIdentifier: 
+  tileName: Diamond
+  tileSprites:
+  - {fileID: 21300000, guid: ee15d08d417d4624cb89a87331dc1b60, type: 3}
+  - {fileID: 21300000, guid: ed45e91632109fa46b891ca4f37fe784, type: 3}

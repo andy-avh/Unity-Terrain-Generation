@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739c1abc69a066949be2fa4b0c5083b2, type: 3}
+  m_Name: Tall Grass
+  m_EditorClassIdentifier: 
+  tileName: Tall Grass
+  tileSprites:
+  - {fileID: 21300000, guid: 202bcb53a05edcb498d256bcb33b070a, type: 3}
+  - {fileID: 21300000, guid: fbb0a7434f732b040844bbe88a6aa412, type: 3}
+  - {fileID: 21300000, guid: 60ad9ac7ee3bb9d4290dcc96217a04b4, type: 3}
+  - {fileID: 21300000, guid: 27c606b3ddbbf5f43870276f8f141576, type: 3}
